@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# Local Events App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The 'Local Events App' allows Klaviyo users to send news of local events to the Profiles within their accounts.
 
-## Available Scripts
+## How the App works
+When the app is running, users will be prompted to enter their Private API key to log in.
 
+![Screenshot](Screenshot1.png)
+
+Once logged in, the user will be able to select the list from their account that they wish to send local events to.
+
+![Screenshot](Screenshot2.png)
+
+Once a list has been selected, map markers are placed on the map to visualise the profile's locations based on their lat/lng. 
+The local events can then be assigned to the profiles by clicking the 'Assign local events to Profiles' button.
+
+![Screenshot](Screenshot3.png)
+
+At this point, the events have now been assigned to the profiles. 
+The Map markers on the right side of the display have now been updated to include the events assigned to each profile.
+Now the user will be able to create a Campaign to send this data to their list by clicking the 'Create Campaign' button.
+
+![Screenshot](Screenshot4.png)
+
+You will now be able to view the email itself by clicking the 'View Campaign' button which will redirect the user to the new Campaign within their Klaviyo account.
+
+![Screenshot](Screenshot5.png)
+
+## NPM Commands
 In the project directory, you can run:
 
-### `npm start`
+### `npm run start:backend`
+
+Launches the node backend
+
+### `npm run start:frontend`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
