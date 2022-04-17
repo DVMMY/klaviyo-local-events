@@ -75,7 +75,7 @@ const ListDisplay = ({ lists, privateKey, setNewProfiles, setChosenList }) => {
               className='list-selections'
               subheader={
                 <ListSubheader component='div' id='nested-list-subheader'>
-                  <span className='list-main-title'>Klaviyo Events App</span>
+                  <span className='list-main-title'>Klaviyo Local Events</span>
                   <br /> Select a list:
                 </ListSubheader>
               }
