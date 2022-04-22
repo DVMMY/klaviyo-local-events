@@ -52,7 +52,7 @@ app.get("/listMembers", (req, res) => {
     });
 });
 
-// GET PROFILE DATA
+// GET PROFILE DATA FROM KLAVIYO
 app.get("/getProfile", (req, res) => {
   const privateKey = req.query.privateKey;
   const personId = req.query.personId;
@@ -121,16 +121,36 @@ app.put("/updateProfile", (req, res) => {
     });
 });
 
+// GET EMAIL TEMPLATES FROM KLAVIYO ACCOUNT
+app.get("/getTemplates", (req, res) => {
+  const privateKey = req.query.privateKey;
+  const options = {
+    method: "GET",
+    url: `https://a.klaviyo.com/api/v1/email-templates?page=0&count=100&api_key=${privateKey}`,
+    headers: { Accept: "application/json" },
+  };
+
+  axios
+    .request(options)
+    .then((response) => {
+      res.json(response.data);
+    })
+    .catch((error) => {
+      console.error("error", error);
+    });
+});
+
 // CREATE NEW KLAVIYO CAMPAIGN
 app.post("/createCampaign", (req, res) => {
   const privateKey = req.query.privateKey;
   const listId = req.query.listId;
+  const selectedTemplate = req.query.selectedTemplate;
 
   const { URLSearchParams } = require("url");
   const encodedParams = new URLSearchParams();
 
   encodedParams.set("list_id", `${listId}`);
-  encodedParams.set("template_id", "YvBtCD");
+  encodedParams.set("template_id", `${selectedTemplate}`);
   encodedParams.set("from_email", "dammy.adeniyi@klaviyo.com");
   encodedParams.set("from_name", "Local Events");
   encodedParams.set("subject", "Local Events");
@@ -152,7 +172,7 @@ app.post("/createCampaign", (req, res) => {
     .request(options)
     .then((response) => {
       res.json(response.data);
-      console.error("response", response);
+      // console.log("response", response);
     })
     .catch((error) => {
       console.error("error", error);

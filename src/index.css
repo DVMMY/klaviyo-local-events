@@ -5,7 +5,7 @@ body {
 /* LOGIN PAGE */
 .login-bg {
   height: 100vh !important;
-  background-image: url("https://source.unsplash.com/random");
+  background-image: url("https://source.unsplash.com/random?tourists");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -43,15 +43,27 @@ body {
 /* LISTS */
 .list-wrap {
   padding: 12px 0 0 12px !important;
+  overflow-y: auto;
+  max-height: 100vh;
 }
 
 .list-main-title {
   font-size: 20px;
 }
 
+.list-selections > .MuiListItemButton-root span {
+  font-weight: 700;
+}
+
 .button-wrap {
   margin-bottom: 20px;
   padding: 0 12px;
+}
+
+.load-wrap {
+  width: 100%;
+  justify-content: center;
+  padding: 40px 0;
 }
 
 /* MAP */

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CssBaseline, Grid } from "@material-ui/core";
 import axios from "axios";
-import ListDisplay from "./components/ListDisplay";
+import ListSelection from "./components/ListSelection";
+import TemplateSelection from "./components/TemplateSelection";
 import MapDisplay from "./components/MapDisplay";
 import LoginDisplay from "./components/LoginDisplay";
 import Button from "@mui/material/Button";
@@ -14,6 +15,7 @@ const App = () => {
   const [chosenList, setChosenList] = useState("");
   const [newProfiles, setNewProfiles] = useState([]);
   const [eventsUpdated, setEventsUpdated] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState("");
   const [campaignId, setCampaignId] = useState("");
 
   /**
@@ -52,7 +54,7 @@ const App = () => {
   const retrieveEventDetails = () => {
     newProfiles.forEach((item) => {
       let personId = item.id;
-      if (item.$latitude.length > 0 && item.$longitude.length > 0) {
+      if (item.$latitude && item.$longitude) {
         const options = {
           method: "GET",
           url: "http://localhost:8000/getEvents",
@@ -122,6 +124,7 @@ const App = () => {
       params: {
         privateKey: privateKey,
         listId: chosenList,
+        selectedTemplate: selectedTemplate,
       },
     };
 
@@ -147,21 +150,22 @@ const App = () => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={4} className='list-wrap'>
               {lists.length > 0 && (
-                <ListDisplay
+                <ListSelection
                   lists={lists}
                   privateKey={privateKey}
                   setNewProfiles={setNewProfiles}
                   setChosenList={setChosenList}
+                  retrieveEventDetails={retrieveEventDetails}
                 />
               )}
-              {newProfiles.length > 0 && (
-                <div className='button-wrap'>
-                  <Button variant='outlined' onClick={retrieveEventDetails}>
-                    Assign local events to Profiles
-                  </Button>
-                </div>
-              )}
               {eventsUpdated && (
+                <TemplateSelection
+                  privateKey={privateKey}
+                  setSelectedTemplate={setSelectedTemplate}
+                  selectedTemplate={selectedTemplate}
+                />
+              )}
+              {eventsUpdated && selectedTemplate && (
                 <div className='button-wrap'>
                   <Button variant='outlined' onClick={createCampaign}>
                     Create Campaign
