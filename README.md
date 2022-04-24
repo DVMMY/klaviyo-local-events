@@ -1,6 +1,14 @@
 # Local Events App
 
 The 'Local Events App' allows Klaviyo users to send news of local events to the Profiles within their accounts.  
+  
+The app utilises both the Google Maps and Ticketmaster API. Therefore, to be able to use the app once pulling the project, you will need to obtain an API key from both platforms.  
+You will be able to generate a Google Maps API key here: https://developers.google.com/maps  
+You will be able to generate a Ticketmaster API key here: https://developer.ticketmaster.com/products-and-docs/apis/getting-started/. 
+  
+Once both API keys have been created, within your project at the root level, you will need to create a .env file.  
+Within this newly created .env file, you will assign the API keys to the environment variables REACT_APP_GOOGLE_MAPS_API_KEY and REACT_APP_TICKETMASTER_API_KEY.   
+
 
 ## How the App works
 When the app is running, users will be prompted to enter their Private API key to log in.  
