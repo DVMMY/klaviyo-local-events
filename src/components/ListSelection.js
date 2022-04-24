@@ -14,7 +14,7 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 const ListSelection = ({
   lists,
   privateKey,
-  setNewProfiles,
+  getExtraProfileData,
   setChosenList,
   retrieveEventDetails,
 }) => {
@@ -37,43 +37,12 @@ const ListSelection = ({
       .request(options)
       .then((response) => {
         setProfiles(response.data.records);
+        getExtraProfileData(response.data.records);
       })
       .catch((error) => {
         console.error(error);
       });
   }, [selectedList]);
-
-  // Retrieves more data for each Profile from selected List (including location details)
-  useEffect(() => {
-    if (profiles.length > 0) {
-      let tempProilesList = [];
-      let itemsProcessed = 0;
-
-      profiles.forEach((item) => {
-        const options = {
-          method: "GET",
-          url: "http://localhost:8000/getProfile",
-          params: {
-            privateKey: privateKey,
-            personId: item.id,
-          },
-        };
-
-        axios
-          .request(options)
-          .then((response) => {
-            tempProilesList.push(response.data);
-            itemsProcessed++;
-            if (itemsProcessed === profiles.length) {
-              setNewProfiles(tempProilesList);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      });
-    }
-  }, [profiles]);
 
   const handleListItemClick = () => {
     setOpen(!open);

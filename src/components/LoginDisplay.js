@@ -20,7 +20,7 @@ const LoginDisplay = (props) => {
     event.preventDefault();
     setTimeout(() => {
       setAttemptedLogin(true);
-    }, 500);
+    }, 750);
   };
 
   return (

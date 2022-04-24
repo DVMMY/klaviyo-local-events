@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { CssBaseline, Grid } from "@material-ui/core";
 import axios from "axios";
 import ListSelection from "./components/ListSelection";
@@ -46,6 +46,43 @@ const App = () => {
   };
 
   /**
+   * Retrieves more data for each Profile from selected List (including location details)
+   *
+   * @returns {Array} Returns an array of Profiles which is being
+   * used to update the 'newProfiles' state
+   */
+  const getExtraProfileData = (profiles) => {
+    if (profiles.length > 0) {
+      let tempProilesList = [];
+      let itemsProcessed = 0;
+
+      profiles.forEach((item) => {
+        const options = {
+          method: "GET",
+          url: "http://localhost:8000/getProfile",
+          params: {
+            privateKey: privateKey,
+            personId: item.id,
+          },
+        };
+
+        axios
+          .request(options)
+          .then((response) => {
+            tempProilesList.push(response.data);
+            itemsProcessed++;
+            if (itemsProcessed === profiles.length) {
+              setNewProfiles(tempProilesList);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      });
+    }
+  };
+
+  /**
    * Uses the Ticketmaster API to retrieve events for each profile within the 'newProfiles' state
    *
    * @returns {Array} Returns an array of 2 events which is then
@@ -90,14 +127,14 @@ const App = () => {
       params: {
         privateKey: privateKey,
         personId: id,
-        eventOneName: events[0].name,
+        eventOneName: encodeURIComponent(events[0].name),
         eventOneDate: events[0].dates.start.localDate,
-        eventOneImage: events[0].images[0].url,
-        eventOneLink: events[0].url,
-        eventTwoName: events[1].name,
+        eventOneImage: encodeURIComponent(events[0].images[0].url),
+        eventOneLink: encodeURIComponent(events[0].url),
+        eventTwoName: encodeURIComponent(events[1].name),
         eventTwoDate: events[1].dates.start.localDate,
-        eventTwoImage: events[1].images[0].url,
-        eventTwoLink: events[1].url,
+        eventTwoImage: encodeURIComponent(events[1].images[0].url),
+        eventTwoLink: encodeURIComponent(events[1].url),
       },
     };
 
@@ -105,6 +142,7 @@ const App = () => {
       .request(options)
       .then((response) => {
         setEventsUpdated(true);
+        getExtraProfileData(newProfiles);
       })
       .catch((error) => {
         console.error(error);
@@ -156,6 +194,7 @@ const App = () => {
                   setNewProfiles={setNewProfiles}
                   setChosenList={setChosenList}
                   retrieveEventDetails={retrieveEventDetails}
+                  getExtraProfileData={getExtraProfileData}
                 />
               )}
               {eventsUpdated && (
