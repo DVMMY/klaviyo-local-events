@@ -14,9 +14,10 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 const ListSelection = ({
   lists,
   privateKey,
-  getExtraProfileData,
   setChosenList,
   retrieveEventDetails,
+  setListProfiles,
+  eventsUpdated
 }) => {
   const [selectedList, setSelectedList] = useState("");
   const [profiles, setProfiles] = useState([]);
@@ -24,25 +25,27 @@ const ListSelection = ({
 
   // Retrieves the list members of the selected Klaviyo List
   useEffect(() => {
-    const options = {
-      method: "GET",
-      url: "http://localhost:8000/listMembers",
-      params: {
-        privateKey: privateKey,
-        selectedList: selectedList,
-      },
-    };
-
-    axios
-      .request(options)
-      .then((response) => {
-        setProfiles(response.data.records);
-        getExtraProfileData(response.data.records);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [selectedList]);
+    if(selectedList.length > 0) {
+      const options = {
+        method: "GET",
+        url: "http://localhost:8000/listMembers",
+        params: {
+          privateKey: privateKey,
+          selectedList: selectedList,
+        },
+      };
+      // console.log('selected list', selectedList);
+      axios
+        .request(options)
+        .then((response) => {
+          setProfiles(response.data);
+          setListProfiles(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [selectedList,eventsUpdated]);
 
   const handleListItemClick = () => {
     setOpen(!open);
@@ -63,7 +66,7 @@ const ListSelection = ({
               className='list-selections'
               subheader={
                 <ListSubheader component='div' id='nested-list-subheader'>
-                  <span className='list-main-title'>Klaviyo Local Events</span>
+                  <span className='list-main-title' onClick={()=>window.location.reload()}>Klaviyo Local Events</span>
                 </ListSubheader>
               }
             >
@@ -79,12 +82,12 @@ const ListSelection = ({
                         sx={{ pl: 4 }}
                         key={list.list_id}
                         onClick={() => {
-                          setSelectedList(list.list_id);
-                          setChosenList(list.list_id);
+                          setSelectedList(list.id);
+                          setChosenList(list.id);
                         }}
                         selected={list.list_id === selectedList}
                       >
-                        <ListItemText primary={list.list_name} />
+                        <ListItemText primary={list.attributes.name} />
                       </ListItemButton>
                     );
                   })}
