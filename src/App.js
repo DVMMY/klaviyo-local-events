@@ -13,10 +13,14 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [lists, setLists] = useState([]);
   const [chosenList, setChosenList] = useState("");
-  const [newProfiles, setNewProfiles] = useState([]);
+  const [listProfiles, setListProfiles] = useState([]);
   const [eventsUpdated, setEventsUpdated] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [campaignId, setCampaignId] = useState("");
+
+  // useEffect(() => {
+  //     console.log('loggedIn', loggedIn);
+  //   }, [loggedIn]);
 
   /**
    * Retrieves all of the lists within the user's Klaviyo account
@@ -36,50 +40,17 @@ const App = () => {
     axios
       .request(options)
       .then((response) => {
-        setLists(response.data);
-        setLoggedIn(true);
+        if(response.data.length > 0) {
+          setLists(response.data);
+          console.log('loggedIn Data', response.data);
+          setLoggedIn(true);
+        }
       })
       .catch((error) => {
         console.error(error);
         setLoggedIn(false);
       });
-  };
-
-  /**
-   * Retrieves more data for each Profile from selected List (including location details)
-   *
-   * @returns {Array} Returns an array of Profiles which is being
-   * used to update the 'newProfiles' state
-   */
-  const getExtraProfileData = (profiles) => {
-    if (profiles.length > 0) {
-      let tempProilesList = [];
-      let itemsProcessed = 0;
-
-      profiles.forEach((item) => {
-        const options = {
-          method: "GET",
-          url: "http://localhost:8000/getProfile",
-          params: {
-            privateKey: privateKey,
-            personId: item.id,
-          },
-        };
-
-        axios
-          .request(options)
-          .then((response) => {
-            tempProilesList.push(response.data);
-            itemsProcessed++;
-            if (itemsProcessed === profiles.length) {
-              setNewProfiles(tempProilesList);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      });
-    }
+      console.log('loggedIn', loggedIn);
   };
 
   /**
@@ -89,15 +60,15 @@ const App = () => {
    * passed into the assignEventDetails function
    */
   const retrieveEventDetails = () => {
-    newProfiles.forEach((item) => {
+    listProfiles.forEach((item) => {
       let personId = item.id;
-      if (item.$latitude && item.$longitude) {
+      if (item.attributes.location.latitude && item.attributes.location.longitude) {
         const options = {
           method: "GET",
           url: "http://localhost:8000/getEvents",
           params: {
             latLng:
-              item.$latitude.toString() + "," + item.$longitude.toString(),
+              item.attributes.location.latitude.toString() + "," + item.attributes.location.longitude.toString(),
           },
         };
 
@@ -127,14 +98,14 @@ const App = () => {
       params: {
         privateKey: privateKey,
         personId: id,
-        eventOneName: encodeURIComponent(events[0].name),
+        eventOneName: events[0].name,
         eventOneDate: events[0].dates.start.localDate,
-        eventOneImage: encodeURIComponent(events[0].images[0].url),
-        eventOneLink: encodeURIComponent(events[0].url),
-        eventTwoName: encodeURIComponent(events[1].name),
+        eventOneImage: events[0].images[0].url,
+        eventOneLink: events[0].url,
+        eventTwoName: events[1].name,
         eventTwoDate: events[1].dates.start.localDate,
-        eventTwoImage: encodeURIComponent(events[1].images[0].url),
-        eventTwoLink: encodeURIComponent(events[1].url),
+        eventTwoImage: events[1].images[0].url,
+        eventTwoLink: events[1].url,
       },
     };
 
@@ -142,7 +113,6 @@ const App = () => {
       .request(options)
       .then((response) => {
         setEventsUpdated(true);
-        getExtraProfileData(newProfiles);
       })
       .catch((error) => {
         console.error(error);
@@ -169,7 +139,7 @@ const App = () => {
     axios
       .request(options)
       .then((response) => {
-        let newCampaignId = response.data.id;
+        let newCampaignId = response.data.data.id;
         setCampaignId(newCampaignId);
       })
       .catch((error) => {
@@ -191,10 +161,10 @@ const App = () => {
                 <ListSelection
                   lists={lists}
                   privateKey={privateKey}
-                  setNewProfiles={setNewProfiles}
                   setChosenList={setChosenList}
                   retrieveEventDetails={retrieveEventDetails}
-                  getExtraProfileData={getExtraProfileData}
+                  setListProfiles={setListProfiles}
+                  eventsUpdated={eventsUpdated}
                 />
               )}
               {eventsUpdated && (
@@ -214,7 +184,7 @@ const App = () => {
               {campaignId && (
                 <div className='button-wrap'>
                   <Link
-                    href={`https://www.klaviyo.com/campaign-wizard/${campaignId}/1`}
+                    href={`https://www.klaviyo.com/email-template-editor/campaign/${campaignId}/content/edit`} 
                     underline='none'
                     target='_blank'
                     rel='noopener'
@@ -226,7 +196,7 @@ const App = () => {
               )}
             </Grid>
             <Grid item xs={12} md={8} className='map-wrapper'>
-              <MapDisplay newProfiles={newProfiles} />
+              <MapDisplay listProfiles={listProfiles} />
             </Grid>
           </Grid>
         </>
