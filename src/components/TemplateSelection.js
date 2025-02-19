@@ -31,13 +31,13 @@ const TemplateSelection = ({
     axios
       .request(options)
       .then((response) => {
-        setTemplates(response.data.data);
+        setTemplates(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
-
+  
   const handleListItemClick = () => {
     setOpen(!open);
   };
@@ -70,7 +70,7 @@ const TemplateSelection = ({
                           }}
                           selected={template.id === selectedTemplate}
                         >
-                          <ListItemText primary={template.name} />
+                          <ListItemText primary={template.attributes.name} />
                         </ListItemButton>
                       );
                     })}
