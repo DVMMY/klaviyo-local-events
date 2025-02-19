@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import MapMarker from "./MapMarker";
 
@@ -19,6 +19,24 @@ const MapDisplay = (props) => {
   });
 
   const [map, setMap] = useState(null);
+  const [zoomLevel, setZoomLevel] = useState(2.2);
+
+  useEffect(() => {
+    const updateZoomLevel = () => {
+      const screenWidth = window.innerWidth;
+      if (screenWidth > 1800) { 
+        setZoomLevel(3);
+      } else {
+        setZoomLevel(2.2); 
+      }
+    };
+    updateZoomLevel();
+
+    window.addEventListener("resize", updateZoomLevel);
+    return () => {
+      window.removeEventListener("resize", updateZoomLevel);
+    };
+  }, []);
 
   const onLoad = useCallback(function callback(map) {
     setMap(map);
@@ -32,14 +50,14 @@ const MapDisplay = (props) => {
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={center}
-      zoom={2}
+      zoom={zoomLevel}
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {props.newProfiles?.map((item, index) => {
+      {props.listProfiles?.map((item, index) => {
         let position = {
-          lat: parseInt(item.$latitude, 10),
-          lng: parseInt(item.$longitude, 10),
+          lat: parseInt(item.attributes.location.latitude, 10),
+          lng: parseInt(item.attributes.location.longitude, 10),
         };
 
         return (
