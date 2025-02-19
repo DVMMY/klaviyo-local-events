@@ -5,7 +5,8 @@ body {
 /* LOGIN PAGE */
 .login-bg {
   height: 100vh !important;
-  background-image: url("https://source.unsplash.com/random?tourists");
+  /* background-image: url("https://source.unsplash.com/random?tourists"); */
+  background-image: url("https://luxurylondon.co.uk/wp-content/uploads/2022/04/boardmasters-uk-festivals-c-shutterstock-Jordan-Crosby.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -49,6 +50,7 @@ body {
 
 .list-main-title {
   font-size: 20px;
+  cursor: pointer;
 }
 
 .list-selections > .MuiListItemButton-root span {
